@@ -28,9 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-    private lateinit var dialogBuilder: AlertDialog.Builder
-    private lateinit var dialog: AlertDialog
-    private lateinit var items:List<TheProject>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,54 +47,6 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
-
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, "database"
-        ).allowMainThreadQueries().build()
-
-        val userDao = db.userDao()
-        val recyclerView:RecyclerView = findViewById(R.id.recyclerView)
-        fun setList(items:List<TheProject>){
-            recyclerView.adapter = MyAdapter(items);
-            recyclerView.layoutManager = LinearLayoutManager(this)
-        }
-
-        items = userDao.getAll()
-        setList(items)
-
-        val fabAddBtn = findViewById<FloatingActionButton>(R.id.fabAddBtn)
-        fabAddBtn.setOnClickListener(View.OnClickListener {
-            dialogBuilder = AlertDialog.Builder(this)
-            val popupView = layoutInflater.inflate(R.layout.popup, null)
-            dialogBuilder.setView(popupView)
-            dialog = dialogBuilder.create();
-            dialog.show();
-
-            val addBtn = popupView.findViewById<Button>(R.id.add_button)
-            val cancelBtn = popupView.findViewById<Button>(R.id.cancel_button)
-            cancelBtn.setOnClickListener(View.OnClickListener {
-                dialog.cancel();
-            })
-
-            addBtn.setOnClickListener(View.OnClickListener {
-                val tempID = popupView.findViewById<EditText>(R.id.idText).text.toString()
-                var id:Long = 0
-                if(!tempID.equals("")){
-                    id = tempID.toLong()
-                }
-                val logic = popupView.findViewById<EditText>(R.id.logicText).text.toString()
-                Log.d("ID", id.toString())
-                val theProject = TheProject(id, logic)
-                userDao.insertAll(theProject)
-                items = userDao.getAll()
-                setList(items)
-                dialog.cancel()
-            })
-        })
-
 
     }
 

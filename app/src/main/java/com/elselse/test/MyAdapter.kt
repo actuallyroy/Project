@@ -14,8 +14,6 @@ class MyAdapter(val items: List<TheProject>): RecyclerView.Adapter<MyViewHolder>
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
-
         holder.idTxt.text = items.get(position).code.toString()
         holder.logicTxt.text = items.get(position).anything
     }
